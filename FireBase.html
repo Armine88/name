@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+	<title>FireBase</title>
+  <script src='https://cdn.firebase.com/js/client/1.1.1/firebase.js'></script>
+	<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+	<link rel="stylesheet" type="text/css" href="Firebase.css">
+</head>
+<body>
+<div id='rezultDiv'></div>
+<div id="cursorMoving"></div>
+<script>
+  $(document).ready(function() {
+    var myDataRef = new Firebase("https://f63m53sa6a7.firebaseio-demo.com/");
+    $('#cursorMoving').mousemove(function( e ) {
+      var pointer=$('<div></div>').addClass('log');
+      $('#cursorMoving').append(pointer);
+      pointer.css({
+        'position': 'fixed',
+        top: e.pageY,    
+        left: e.pageX
+      });
+      myDataRef.push({ y: e.pageY, x: e.pageX});
+      myDataRef.on('child_added', function(snapshot) {
+        var cur = snapshot.val();
+        var pointer1=$('<div></div>').addClass('log');
+        $('#rezultDiv').append(pointer1);
+        pointer1.css({
+          'position': 'absolute',
+          'top': cur.y-220,
+          'left': cur.x
+        });
+      });
+      myDataRef.remove();
+    });
+    $('#cursorMoving').mouseleave(function(){
+      $('#cursorMoving').empty();
+      
+    });
+  });
+</script>
+</body>
+</html>
